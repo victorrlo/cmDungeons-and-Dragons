@@ -1,7 +1,7 @@
 # Projeto Terminal
 Primeiro trabalho de Sistemas Operacionais, um terminal de comando usando o fork().
 
-#Instruções para uso do comando writecrazy
+# Instruções para uso do comando writecrazy
 Primeiro, assim que você executar o >>>writecrazy
 será aberto um novo processo filho.
 
