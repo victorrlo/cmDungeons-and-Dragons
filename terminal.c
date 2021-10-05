@@ -279,9 +279,11 @@ void writecrazy(){
                     fclose(p);
 
                     printf("\nEscrita realizada com sucesso pelo processo filho!");
+                    exits(); //fecha o processo filho
             }
             else{
                 printf("\nModo de Escrita finalizado!");
+                exit(1);
             }
 
         }
