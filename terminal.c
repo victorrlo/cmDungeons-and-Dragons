@@ -572,7 +572,7 @@ void help(){
     printf("cdir   >>> Visualiza o diretorio e seus arquivos\n");
     printf("copy   >>> Copia um arquivo para um novo arquivo ou adiciona a arquivo existente\n");
     printf("crazy   >>> Criar uma loucura de processos a cada comando, sem ordem, TOME CUIDADO AO USAR!!!\n");
-    printf("writecrazy  >>> Escreve duas coisas no arquivo em cada processo\n !!!Atencao! A cada a invocacao do comando writecrazy, um processo novo sera aberto\n e continuara executando ate o comando exit ser invocado!!!\n");
+    printf("writecrazy  >>> Abre um novo processo de escrita filho do terminal para escrever 2 arquivos seguidos.\n");
    /* printf("cknow  >>> Visualiza quantas vezes um caractere foi repetido no arquivo\n");
     printf("lknow  >>> Visualiza quantas linhas existem no arquivo\n");
     printf("gcd    >>> Acha o maior divisor comum de numeros\n");
