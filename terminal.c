@@ -13,31 +13,39 @@
 #include <sys/shm.h>
 #include <sys/wait.h>
 
-int* getSegmet(int entry, int size);
-int* createSegmet(int entry, int size);
 
+void moveDir();
+void cdirs();
 void reads();
 void writes();
-void writecrazy();
+void copy();
 int checkIfFileExists();
-void append();
 void clear();
 void help();
-void dt();
 void exits();
-void startscreen();
-void removes();
-void renames();
+void exitSpecial();
+
+void green();
+void greenBold();
+void red();
+void redBold();
+void yellow();
+void yellowBold();
+void blueBold();
+void whiteBold();
+void purpleBold();
+void purple();
+
+void executarFork();
+
+//funções que funcionavam no windows(tive que trocar por causa do fork para o ubuntu)
+void dt();
+void append();
 void edit();
-void cdir();
-void copy();
-void cknow();
-void lknow();
-void ccount();
-void gcd();
-void lcm();
-void tconv();
-int execFork();
+void renames();
+void removes();
+
+
 
 int main(){
 
@@ -45,32 +53,31 @@ int main(){
 
     char a[100];
 
+    purpleBold();
     printf("Projeto Terminal\nVictor Leta\n\n");
-
-    dt();
     printf("Bem-vindo ao Projeto Terminal de Victor Leta\n");
     printf("Escreva \"help\" para mais informacoes.\n\n");
 
     while(1){
 
-        printf("\n>>> ");
+        green();
+
+        cdirs();
         fflush(stdin);
         scanf("%s", a);
 
         if(strcmp(a, "read") == 0){
             reads();
         }
-        else if(strcmp(a, "writecrazy") == 0){
-            writecrazy();
+        else if(strcmp(a, "fork") == 0){
+            executarFork();
         }
-        else if(strcmp(a, "crazy") == 0){
-            fork();
+        else if(strcmp(a, "cd") == 0){
+            moveDir();
         }
         else if(strcmp(a, "write") == 0){
+            greenBold();
             writes();
-        }
-        else if(strcmp(a, "append") == 0){
-            append();
         }
         else if(strcmp(a, "clr") == 0){
             clear();
@@ -78,23 +85,8 @@ int main(){
         else if(strcmp(a, "help") == 0){
             help();
         }
-        else if(strcmp(a, "dt") == 0){
-            dt();
-        }
-        else if(strcmp(a, "stscr") == 0){
-            startscreen();
-        }
-        else if(strcmp(a, "remove") == 0){
-            removes();
-        }
-        else if(strcmp(a, "rename") == 0){
-            renames();
-        }
-        else if(strcmp(a, "edit") == 0){
-            edit();
-        }
-        else if(strcmp(a, "cdir") == 0){
-            cdir();
+        else if(strcmp(a, "cd") == 0){
+            moveDir();
         }
         else if(strcmp(a, "copy") == 0){
             copy();
@@ -103,13 +95,118 @@ int main(){
             exits();
         }
         else{
-            printf("Coloque apenas as opcoes citadas no \"help\"!");
+            redBold();
+            printf("\nColoque apenas as opcoes citadas no \"help\"!\n");
         }
 
     }
 }
 
+void executarFork(){
+
+    purple();
+    char a[100];
+    int b = 777;
+
+    pid_t pid, wpid;
+    int status;
+
+    printf("Valor de b atual:%d", b);
+
+    pid = fork();
+
+    if(pid == 0){
+        blueBold();
+        printf("\nOi! Eu sou o filho executando!!\n");
+        b+= 89;
+        printf("\nValor de b do filho:%d\n", b);
+        exitSpecial();
+    }
+    else if(pid < 0){
+        redBold();
+        printf("\nERRO! O pai e esteril!!!\n");
+    }
+    else{
+        do{
+            wpid = waitpid(pid, &status, WUNTRACED);
+        }while(!WIFEXITED(status) && !WIFSIGNALED(status));
+
+        yellowBold();
+        printf("\nOlá! Eu sou o pai executando!\n");
+        b -= 192;
+        printf("\nValor de b do pai:%d\n", b);
+    }
+}
+
+void purple(){
+    printf("\033[0;35m");
+}
+
+void purpleBold(){
+    printf("\033[1;35m");
+}
+
+void whiteBold(){
+    printf("\033[1;37m");
+}
+
+void blueBold(){
+    printf("\033[1;34m");
+}
+
+void green(){
+    printf("\033[0;32m");
+}
+
+void greenBold(){
+    printf("\033[1;32m");
+}
+
+void red(){
+    printf("\033[0;31m");
+}
+
+void redBold(){
+    printf("\033[1;31m");
+}
+
+void yellow(){
+    printf("\033[0;33m");
+}
+
+void yellowBold(){
+    printf("\033[1;33m");
+}
+
+void cdirs(){
+    int sizeDir = 1024;
+    char currentDir[sizeDir];
+
+    getcwd(currentDir, sizeof(currentDir));
+    printf("%s>>> ", currentDir);
+    
+}
+
+void moveDir(){
+
+    char a[100];
+    printf("\nDigite o diretorio desejado:");
+    scanf("%s", a);
+
+    if(chdir(a) != 0){
+        redBold();
+        printf("\nErro! Diretorio nao encontrado!\n");
+    }
+    else{
+        chdir(a);
+    }
+
+}
+
 void reads(){
+
+    whiteBold();
+
     char a[100];
 
     printf("Use .txt ou outra extensao para realizar leitura.\nEx: hello.txt\n\n");
@@ -126,10 +223,11 @@ void reads(){
     p = fopen(a, "r");
 
     if(p == NULL){
+        redBold();
         printf("\nErro! Arquivo inexistente!\n");
        
         printf("\n");
-
+        whiteBold();
         printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"); 
         //como colocar um timer aqui?
         
@@ -206,7 +304,7 @@ void writes(){
                 }
                 fclose(p);
 
-                printf("\nEscrita realizada com sucesso!");
+                printf("\nEscrita realizada com sucesso!\n");
         }
         else{
             printf("\nModo de Escrita finalizado!");
@@ -237,289 +335,13 @@ void writes(){
     
 }
 
-void writecrazy(){
-    char a[100];
-    int check;
-    int status;
-
-    printf("Use .txt ou qualquer outra extensao para leitura.\nEx: hello.txt\n\n");
-
-    FILE *p;
-
-    pid_t pid, wpid;
-
-    pid = fork();
-
-    if(pid == 0){
-        printf("Coloque o nome do arquivo a ser escrito pelo processo filho: ");
-        scanf("%s", a);
-
-        if(checkIfFileExists(a) == 1){
-            
-            printf("\nArquivo ja existe! Deseja sobrescrever?(Todo o conteudo existente anteriormente sera apagado!!!)\nEscreva 1 para SIM:\n");
-            scanf("%d", &check);
-
-            if(check == 1){
-                    p = fopen(a, "w");
-
-                    fflush(stdin);
-
-                    printf("Digite ~ para sair do modo de escrita!\n");
-                    printf("Comeco da escrita: \n");
-
-                    char ch = ' '; 
-
-                    while(ch != '~'){
-                        ch = getchar();
-
-                        if(ch != '~'){
-                            fputc(ch , p);
-                        }
-                    }
-                    fclose(p);
-
-                    printf("\nEscrita realizada com sucesso pelo processo filho!");
-                    exits(); //fecha o processo filho
-            }
-            else{
-                printf("\nModo de Escrita finalizado!");
-                exit(1);
-            }
-
-        }
-        else if(checkIfFileExists(a) == 0){
-            p = fopen(a, "w");
-
-            fflush(stdin);
-
-            printf("Digite ~ para sair do modo de escrita!\n");
-            printf("Comeco da escrita: \n");
-
-            char ch = ' '; 
-
-            while(ch != '~'){
-                ch = getchar();
-
-                if(ch != '~'){
-                    fputc(ch , p);
-                }
-            }
-            fclose(p);
-
-            printf("\nEscrita realizada com sucesso!");
-        }
-    } 
-    else if(pid < 0){
-        perror("lsh");
-    }
-    else{
-
-        do {
-        wpid = waitpid(pid, &status, WUNTRACED);
-        printf("Coloque o nome do arquivo a ser escrito pelo processo pai: ");
-        scanf("%s", a);
-
-        if(checkIfFileExists(a) == 1){
-            
-            printf("\nArquivo ja existe! Deseja sobrescrever?(Todo o conteudo existente anteriormente sera apagado!!!)\nEscreva 1 para SIM:\n");
-            scanf("%d", &check);
-
-            if(check == 1){
-                    p = fopen(a, "w");
-
-                    fflush(stdin);
-
-                    printf("Digite ~ para sair do modo de escrita!\n");
-                    printf("Comeco da escrita: \n");
-
-                    char ch = ' '; 
-
-                    while(ch != '~'){
-                        ch = getchar();
-
-                        if(ch != '~'){
-                            fputc(ch , p);
-                        }
-                    }
-                    fclose(p);
-
-                    printf("\nEscrita realizada com sucesso!");
-            }
-            else{
-                printf("\nModo de Escrita finalizado!");
-            }
-
-        }
-        else if(checkIfFileExists(a) == 0){
-            p = fopen(a, "w");
-
-            fflush(stdin);
-
-            printf("Digite ~ para sair do modo de escrita!\n");
-            printf("Comeco da escrita: \n");
-
-            char ch = ' '; 
-
-            while(ch != '~'){
-                ch = getchar();
-
-                if(ch != '~'){
-                    fputc(ch , p);
-                }
-            }
-            fclose(p);
-
-            printf("\nEscrita realizada com sucesso pelo processo pai!");
-        }
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-        
-    }
-    
-    
-}
-
-void append(){
-
-    char a[100];
-    int check;
-
-    printf("Use .txt ou qualquer outra extensao para leitura.\nEx: hello.txt\n\n");
-
-    FILE *p;
-    
-    printf("Coloque o nome do arquivo para realizar a operaçao de Append: ");
-    scanf("%s", a);
-
-    printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-
-    if(checkIfFileExists(a) == 0){
-        printf("\nDeseja criar um novo arquivo?(Digite 1 para SIM)\n");
-        scanf("%d", &check);
-
-        if(check == 1){
-            p = fopen(a, "a");
-
-            printf("Digite ~ para sair do modo de escrita!\n");
-            printf("Comeco da escrita: \n");
-
-            char ch = ' ';
-
-            while(ch != '~'){
-                ch = getchar();
-
-                if(ch != '~'){
-                    fputc(ch, p);
-                }
-            }
-            printf("\nEscrita realizada com sucesso!");
-            fclose(p);
-        }
-        else{
-            printf("\nModo de Escrita finalizado!");
-        }
-
-        printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"); 
-        
-        }
-        else if(checkIfFileExists(a) == 1){
-            p = fopen(a, "a");
-
-            printf("Digite ~ para sair do modo de escrita!\n");
-            printf("Comeco da escrita: \n");
-
-            char ch = ' ';
-
-            while(ch != '~'){
-                ch = getchar();
-
-                if(ch != '~'){
-                    fputc(ch, p);
-                }
-            }
-            printf("\nEscrita realizada com sucesso!");
-            fclose(p);  
-        }
-        else{
-           printf("\nModo de Escrita finalizado!");
-        }
-}
-
 void clear() {
   printf("\033[H\033[J");
 }
 
-void dt(){
-    time_t tt = time(NULL);
-    printf("%s", ctime(&tt));
-}
-
-void startscreen(){
-    system("cls");
-    printf("Projeto Terminal\nVictor Leta\n\n");
-
-    dt();
-    printf("Bem-vindo ao Projeto Terminal de Victor Leta\n");
-    printf("Escreva \"help\" para mais informacoes.\n\n");
-}
-
-void removes(){
-    char a[100];
-    int m;
-
-    printf("Coloque o nome do arquivo a ser removido: ");
-    scanf("%s", a);
-
-    m = remove(a);
-
-    if(checkIfFileExists(a) == 1){
-        printf("Arquivo removido com sucesso!");
-    }
-    else{
-        printf("Erro na remocao do arquivo, por favor checar se o arquivo existe no diretorio\n");
-    }
-}
-
-void renames(){
-    char a[100], b[100];
-    int m;
-
-    printf("Digite o nome do arquivo que deseja renomear: ");
-    scanf("%s", a);
-
-    printf("\nDigite o novo nome: ");
-    scanf("%s", b);
-
-    m = rename(a, b);
-
-    if(m == 0){
-        printf("Arquivo renomeado com sucesso!\n");
-    }
-    else{
-        printf("Erro ao tentar renomear o arquivo, por favor, cheque a existencia do arquivo no diretorio\n");
-    }
-}
-
-void edit(){
-    char a[100];
-
-    printf("CUIDADO! Feche o editor para usar o Terminal\n");
-    printf("Use .txt ou qualquer outra extensao para copiar.\nEx: hello.txt\n\n");
-    printf("Digite o nome do arquivo a ser editado: ");
-    scanf("%s", a);
-
-    system(a);
-
-    printf("Programa editor aberto com sucesso!\n");
-}
-
-void cdir(){
-    char a[100];
-
-    printf("Digite o diretorio desejado: ");
-    system("dir");
-}
-
 void copy(){
+
+    blueBold();
 
     char a[100], b[100];
     int c;
@@ -530,6 +352,7 @@ void copy(){
     scanf("%s", a);
 
     if(checkIfFileExists(a) == 0){
+        redBold();
         printf("\nErro! Arquivo inexistente!\n");
        
         printf("\n");
@@ -559,20 +382,21 @@ void copy(){
 
 
 void help(){
+
+    yellowBold();
     printf("\n");
+    printf("cd     >>> Encaminhar a outro diretorio\n");
     printf("write  >>> Escrever/Criar arquivo\n");
     printf("read   >>> Ler do arquivo\n");
-    printf("append >>> Adicionar(append) no arquivo\n");
-    printf("remove >>> Remover um arquivo\n");
-    printf("rename >>> Renomear arquivo\n");
+    //printf("append >>> Adicionar(append) no arquivo\n");
+    //printf("remove >>> Remover um arquivo\n");
+    //printf("rename >>> Renomear arquivo\n");
     printf("clr    >>> Limpa a tela\n");
-    printf("dt     >>> Mostra data e hora\n");
-    printf("stscr  >>> Mostra a tela inicial\n");
-    printf("edit   >>> Edita um arquivo\n");
-    printf("cdir   >>> Visualiza o diretorio e seus arquivos\n");
-    printf("copy   >>> Copia um arquivo para um novo arquivo ou adiciona a arquivo existente\n");
-    printf("crazy   >>> Criar uma loucura de processos a cada comando, sem ordem, TOME CUIDADO AO USAR!!!\n");
-    printf("writecrazy  >>> Abre um novo processo de escrita filho do terminal para escrever 2 arquivos seguidos.\n");
+    //printf("dt     >>> Mostra data e hora\n");
+    //printf("stscr  >>> Mostra a tela inicial\n");
+    //printf("edit   >>> Edita um arquivo\n");
+    //printf("cdir   >>> Visualiza o diretorio e seus arquivos\n");
+    //printf("copy   >>> Copia um arquivo para um novo arquivo ou adiciona a arquivo existente\n");
    /* printf("cknow  >>> Visualiza quantas vezes um caractere foi repetido no arquivo\n");
     printf("lknow  >>> Visualiza quantas linhas existem no arquivo\n");
     printf("gcd    >>> Acha o maior divisor comum de numeros\n");
@@ -581,9 +405,17 @@ void help(){
 
     printf("exit   >>> Sai do programa\n");
     printf("\n");
+    green();
 }
 
 void exits(){
+    greenBold();
     printf("Projeto Terminal finalizado com sucesso!\n");
+    exit(1);
+}
+
+void exitSpecial(){
+    purpleBold();
+    printf("Processo do Filho terminado!\n");
     exit(1);
 }
