@@ -385,6 +385,7 @@ void help(){
 
     yellowBold();
     printf("\n");
+    printf("fork     >>> Demonstra graficamente o comportamento de um fork manipulando uma unica variavel\n");
     printf("cd     >>> Encaminhar a outro diretorio\n");
     printf("write  >>> Escrever/Criar arquivo\n");
     printf("read   >>> Ler do arquivo\n");
